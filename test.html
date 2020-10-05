@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <title>サンプル</title>
+
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.datatables.net/v/dt/jq-3.3.1/dt-1.10.22/r-2.2.6/sl-1.3.1/datatables.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modaal@0.4.4/dist/css/modaal.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script type="text/javascript"
+        src="https://cdn.datatables.net/v/dt/jq-3.3.1/dt-1.10.22/r-2.2.6/sl-1.3.1/datatables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/modaal@0.4.4/dist/js/modaal.min.js"></script>
+    <script src="wp.js"></script>
+    <script src="wpdb.js"></script>
+    <script src="columnsSettings.js"></script>
+    <script>
+        var dt;
+
+        jQuery(function ($) {
+            $.extend($.fn.dataTable.defaults, {
+                language: {
+                    url: "http://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Japanese.json"
+                }
+            });
+
+            dt = $('#tbl1').DataTable({
+                data: JSON.parse(JSON.stringify(wp)),
+                lengthChange: false,
+                displayLength: 50,
+                select: true,
+                columns: columnsSettings
+            })
+        });
+
+    </script>
+</head>
+
+<body>
+    <table id="tbl1" class="table-bordered cell-border stripe responsive norwap" width="100%">
+        <thead>
+            <th>装備ID</th>
+            <th>装備種別</th>
+            <th>装備名</th>
+            <th>改修Lv</th>
+            <th>目標Lv</th>
+            <th>アイコン</th>
+            <th>火力</th>
+            <th>雷装</th>
+            <th>対空</th>
+            <th>装甲</th>
+            <th>対潜</th>
+            <th>回避</th>
+            <th>索敵</th>
+            <th>命中</th>
+            <th>爆装</th>
+            <th>射程</th>
+            <th>行動範囲</th>
+        </thead>
+    </table>
+</body>
+
+</html>
