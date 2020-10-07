@@ -3,15 +3,25 @@
 
 <head>
 
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta charset="utf-8">
     <title>サンプル</title>
 
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
     <link rel="stylesheet" type="text/css"
-        href="https://cdn.datatables.net/v/dt/jq-3.3.1/dt-1.10.22/r-2.2.6/sl-1.3.1/datatables.min.css" />
+        href="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.22/b-1.6.4/b-flash-1.6.4/r-2.2.6/sl-1.3.1/datatables.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modaal@0.4.4/dist/css/modaal.min.css">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
     <script type="text/javascript"
-        src="https://cdn.datatables.net/v/dt/jq-3.3.1/dt-1.10.22/r-2.2.6/sl-1.3.1/datatables.min.js"></script>
+        src="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.22/b-1.6.4/b-flash-1.6.4/r-2.2.6/sl-1.3.1/datatables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/modaal@0.4.4/dist/js/modaal.min.js"></script>
     <script src="columnsSettings.js"></script>
     <script src="wpdb.js"></script>
@@ -20,13 +30,13 @@
         var input = [];
 
         jQuery(function ($) {
-            
+
             $('.toggleBtn').click(function () {
                 var index = $('.toggleBtn').index(this);
                 $('.pages').hide();
                 $('.pages').eq(index).show();
             });
-            
+
             $('#putBtn').click(function () {
                 input = JSON.parse($("#jsonData").val());
                 $("#jsonData").val("");
@@ -52,20 +62,62 @@
 
     </script>
     <style>
-        .dataTables_filter { display: none; }
+        .dataTables_filter {
+            display: none;
+        }
+
+        table.dataTable thead .sorting::after,table.dataTable thead .sorting::before,
+        table.dataTable thead .sorting_asc::after,table.dataTable thead .sorting_asc::before {
+            display: none;
+        }
+
+        table.dataTable thead .sorting_desc::after,table.dataTable thead .sorting_desc::before  {
+            display: none;
+        }
+
+        table.dataTable thead .sorting {
+            background-image: url(https://datatables.net/media/images/sort_both.png);
+            background-repeat: no-repeat;
+            background-position: center right;
+        }
+
+        table.dataTable thead .sorting_asc {
+            background-image: url(https://datatables.net/media/images/sort_asc.png);
+            background-repeat: no-repeat;
+            background-position: center right;
+        }
+
+        table.dataTable thead .sorting_desc {
+            background-image: url(https://datatables.net/media/images/sort_desc.png);
+            background-repeat: no-repeat;
+            background-position: center right;
+        }
+
     </style>
 </head>
 
 <body>
-    <button type="button" id="dataBtn" class="toggleBtn" >データ表示</button>
-    <button type="button" id="inputBtn" class="toggleBtn" >データ入力</button>
-    <button type="button" id="memoBtn" class="toggleBtn" >メモ</button>
+    <button type="button" id="dataBtn" class="toggleBtn btn btn-outline-primary">データ表示</button>
+    <button type="button" id="inputBtn" class="toggleBtn btn btn-outline-primary">データ入力</button>
+    <button type="button" id="memoBtn" class="toggleBtn btn btn-outline-primary">メモ</button>
 
     <div id="page1" class="pages">
-        <table id="tbl1" class="table-bordered cell-border stripe responsive norwap" width="100%">
+        <!-- <table id="tbl1" class="table-bordered cell-border stripe responsive norwap" width="100%"> -->
+        <table id="tbl1" class="table" width="100%">
             <thead>
-                <th>装備ID</th>
-                <th>装備種別</th>
+                <th><button type="button" class="btn btn-dark">装備ID</button></th>
+                <th>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu1"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            装備種別
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            <a class="dropdown-item" href="#!">小口径主砲</a>
+                            <a class="dropdown-item" href="#!">ああああああ</a>
+                        </div>
+                    </div>
+                </th>
                 <th>装備名</th>
                 <th>改修Lv</th>
                 <th>目標Lv</th>
@@ -89,7 +141,7 @@
         艦隊分析ページの装備用コードを下のテキストフィールドに入力して反映を押す<br>
         <button type="button" id="putBtn">反映</button><br><br>
         <textarea name="data" id="jsonData" cols="100" rows="20"></textarea>
-        
+
     </div>
     <div id="page3" class="pages" style="display: none;">
         <p>

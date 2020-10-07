@@ -4,6 +4,7 @@ columnsSettings = [
     },
     {
         data: "api_slotitem_id",
+        "orderable": false,
         render: function (data) { return db.find((v) => v.wpId === data.toString()).typeName }
     },
     {
