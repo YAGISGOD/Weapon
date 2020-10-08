@@ -83,6 +83,8 @@
                         j++;
                     }
                 }
+                // 何故かあらかじめ1回クリックしておかないと動きがおかしくなる
+                $('.dropdown-menu').trigger("click");
             });
 
             $.extend($.fn.dataTable.defaults, {
