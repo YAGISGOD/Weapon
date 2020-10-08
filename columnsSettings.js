@@ -1,67 +1,86 @@
 columnsSettings = [
     {
-        data: "api_slotitem_id"
+        data: "api_slotitem_id",
+        width: "10px"
     },
     {
         data: "api_slotitem_id",
         "orderable": false,
-        render: function (data) { return db.find((v) => v.wpId === data.toString()).typeName }
+        render: function (data) { return db.find((v) => v.wpId === data.toString()).typeName },
+        width: "150px"
     },
     {
         data: "api_slotitem_id",
-        render: function (data) { return db.find((v) => v.wpId === data.toString()).wpName }
+        render: function (data) { return db.find((v) => v.wpId === data.toString()).wpName },
+        width: "300px"
     },
-    { data: "api_level" },
+    {
+        data: "api_level",
+        width: "50px"
+    },
     {
         data: null,
-        render: function (data) { return "" }
+        render: function (data) { return "" },
+        width: "50px"
     },
     {
         data: "api_slotitem_id",
-        render: function (data) { return db.find((v) => v.wpId === data.toString()).iconId }
+        render: function (data) { return db.find((v) => v.wpId === data.toString()).iconId },
+        width: "50px"
     },
     {
         data: "api_slotitem_id",
-        render: function (data) { return db.find((v) => v.wpId === data.toString()).fire }
+        render: function (data) { return db.find((v) => v.wpId === data.toString()).fire },
+        width: "28px"
     },
     {
         data: "api_slotitem_id",
-        render: function (data) { return db.find((v) => v.wpId === data.toString()).torpedo }
+        render: function (data) { return db.find((v) => v.wpId === data.toString()).torpedo },
+        width: "28px"
     },
     {
         data: "api_slotitem_id",
-        render: function (data) { return db.find((v) => v.wpId === data.toString()).aa }
+        render: function (data) { return db.find((v) => v.wpId === data.toString()).aa },
+        width: "28px"
     },
     {
         data: "api_slotitem_id",
-        render: function (data) { return db.find((v) => v.wpId === data.toString()).armor }
+        render: function (data) { return db.find((v) => v.wpId === data.toString()).armor },
+        width: "28px"
     },
     {
         data: "api_slotitem_id",
-        render: function (data) { return db.find((v) => v.wpId === data.toString()).asw }
+        render: function (data) { return db.find((v) => v.wpId === data.toString()).asw },
+        width: "28px"
     },
     {
         data: "api_slotitem_id",
-        render: function (data) { return db.find((v) => v.wpId === data.toString()).evasion }
+        render: function (data) { return db.find((v) => v.wpId === data.toString()).evasion },
+        width: "28px"
     },
     {
         data: "api_slotitem_id",
-        render: function (data) { return db.find((v) => v.wpId === data.toString()).los }
+        render: function (data) { return db.find((v) => v.wpId === data.toString()).los },
+        width: "28px"
     },
     {
         data: "api_slotitem_id",
-        render: function (data) { return db.find((v) => v.wpId === data.toString()).accuracy }
+        render: function (data) { return db.find((v) => v.wpId === data.toString()).accuracy },
+        width: "28px"
     },
     {
         data: "api_slotitem_id",
-        render: function (data) { return db.find((v) => v.wpId === data.toString()).bombing }
+        render: function (data) { return db.find((v) => v.wpId === data.toString()).bombing },
+        width: "28px"
     },
     {
         data: "api_slotitem_id",
-        render: function (data) { return db.find((v) => v.wpId === data.toString()).range }
+        render: function (data) { return db.find((v) => v.wpId === data.toString()).range },
+        width: "28px"
     },
     {
         data: "api_slotitem_id",
-        render: function (data) { return db.find((v) => v.wpId === data.toString()).radius }
+        render: function (data) { return db.find((v) => v.wpId === data.toString()).radius },
+        width: "250px"
     },
 ];
