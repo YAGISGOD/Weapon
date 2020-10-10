@@ -33,18 +33,51 @@
                 $('.pages').eq(index).show();
             });
 
-            //ドロップダウン関連（処理が微妙すぎなのでドロップダウンはやめる方針
-            $('.dropdown-menu').click(function (e) {
-                //ドロップダウンの子要素のクリックイベント（挙動が変
-                $("#AllCheck").click(function () {
-                    $('input:checkbox[name="wpTypeCheck"]').prop("checked", true);
-                });
-                $("#AllNoCheck").click(function () {
-                    $('input:checkbox[name="wpTypeCheck"]').prop("checked", false);
-                });
+            // //ドロップダウン関連（処理が微妙すぎなのでドロップダウンはやめる方針
+            // $('.dropdown-menu').click(function (e) {
+            //     //ドロップダウンの子要素のクリックイベント（挙動が変
+            //     $("#AllCheck").click(function () {
+            //         $('input:checkbox[name="wpTypeCheck"]').prop("checked", true);
+            //     });
+            //     $("#AllNoCheck").click(function () {
+            //         $('input:checkbox[name="wpTypeCheck"]').prop("checked", false);
+            //     });
 
-                //ドロップダウンが閉じないようにする、デバックとか使うと閉じる
-                e.stopPropagation();
+            //     //ドロップダウンが閉じないようにする、デバックとか使うと閉じる
+            //     e.stopPropagation();
+
+            //     //チェック状況によってフィルタを操作する
+            //     var typeChecked = [];
+            //     typeChecked.length = 0;
+            //     $('input:checkbox[name="wpTypeCheck"]:checked').each(function () {
+            //         typeChecked.push($(this).val());
+            //     });
+            //     var searchType = typeChecked.join('|');
+            //     dt.columns(1).search(searchType, true).draw();
+
+            //     $('input:checkbox[name="wpTypeCheck"]').change();
+            // });
+
+            //ドロップダウンの子要素のクリックイベント（挙動が変
+            $("#AllCheck").click(function () {
+                $('input:checkbox[name="wpTypeCheck"]').prop("checked", true);
+            });
+            $("#AllNoCheck").click(function () {
+                $('input:checkbox[name="wpTypeCheck"]').prop("checked", false);
+            });
+
+            $(document).on('click', '#AllCheck', function () {
+                $('input:checkbox[name="wpTypeCheck"]').prop("checked", true);
+            });
+            $(document).on('click', '#AllNoCheck', function () {
+                $('input:checkbox[name="wpTypeCheck"]').prop("checked", false);
+            });
+
+            //ドロップダウン関連（処理が微妙すぎなのでドロップダウンはやめる方針
+            // $('filter-body').click(function (e) {
+            $(document).on('click', 'input:checkbox[name="wpTypeCheck"]', function () {
+                // //ドロップダウンが閉じないようにする、デバックとか使うと閉じる
+                // e.stopPropagation();
 
                 //チェック状況によってフィルタを操作する
                 var typeChecked = [];
@@ -79,22 +112,38 @@
                 dt.columns.adjust().draw();
 
                 //ドロップダウン生成処理
-                $('#ddm1').empty();
-                $('#ddm1').append('<div class="row"><li class="list-inline-item col-6"><span class="dropdown-item">選択してください</span></li>'
+                $('#filter-body').empty();
+                $('#filter-body').append('<div class="row"><li class="list-inline-item col-6"><span class="dropdown-item">選択してください</span></li>'
                     + '<button type="button" id="AllCheck" class="btn btn-outline-primary col-2" style="z-index: 999;">付ける</button>'
                     + '<button type="button" id="AllNoCheck" class="btn btn-outline-primary col-2" style="z-index: 1000;">外す</button></div><hr>');
                 var tmp = dt.column(1).cache('search').unique();
-                $('#ddm1').append('<div class="row col-12"></div>');
+                $('#filter-body').append('<div class="row col-12"></div>');
                 var j = 1;
                 for (let i = 0; i < tmp.length; i++) {
-                    $('#ddm1 > div ').eq(j).append('<div class="dropdown-item col-md-6 col-xl-3" style="vertical-align:middle !important;"><div class="row col-12"><input type="checkbox" name="wpTypeCheck" value="' + tmp[i] + '"  checked="checked" class="col-2"><div class="col-8">' + tmp[i] + '</div></div></div>')
+                    $('#filter-body > div ').eq(j).append('<div class="dropdown-item col-md-6 col-xl-3" style="vertical-align:middle !important;"><div class="row col-12"><input type="checkbox" name="wpTypeCheck" value="' + tmp[i] + '"  checked="checked" class="col-2"><div class="col-8">' + tmp[i] + '</div></div></div>')
                     if (((i + 1) % 4) == 0) {
-                        $('#ddm1').append('<div class="row col-12"></div>')
+                        $('#filter-body ').append('<div class="row col-12"></div>')
                         j++;
                     }
                 }
+
+                // //ドロップダウン生成処理
+                // $('#ddm1').empty();
+                // $('#ddm1').append('<div class="row"><li class="list-inline-item col-6"><span class="dropdown-item">選択してください</span></li>'
+                //     + '<button type="button" id="AllCheck" class="btn btn-outline-primary col-2" style="z-index: 999;">付ける</button>'
+                //     + '<button type="button" id="AllNoCheck" class="btn btn-outline-primary col-2" style="z-index: 1000;">外す</button></div><hr>');
+                // var tmp = dt.column(1).cache('search').unique();
+                // $('#ddm1').append('<div class="row col-12"></div>');
+                // var j = 1;
+                // for (let i = 0; i < tmp.length; i++) {
+                //     $('#ddm1 > div ').eq(j).append('<div class="dropdown-item col-md-6 col-xl-3" style="vertical-align:middle !important;"><div class="row col-12"><input type="checkbox" name="wpTypeCheck" value="' + tmp[i] + '"  checked="checked" class="col-2"><div class="col-8">' + tmp[i] + '</div></div></div>')
+                //     if (((i + 1) % 4) == 0) {
+                //         $('#ddm1').append('<div class="row col-12"></div>')
+                //         j++;
+                //     }
+                // }
                 // 何故かあらかじめ1回クリックしておかないと動きがおかしくなる
-                $('.dropdown-menu').trigger("click");
+                // $('.dropdown-menu').trigger("click");
             };
 
             //datatables言語設定
@@ -177,15 +226,30 @@
             <button type="button" id="inputBtn"
                 class="toggleBtn btn btn-outline-primary col-md-6 col-xl-1">データ入力</button>
             <button type="button" id="memoBtn" class="toggleBtn btn btn-outline-primary col-md-6 col-xl-1">メモ</button>
+            <button type="button" id="modalBtn" class="btn btn-outline-primary col-md-6 col-xl-1" data-toggle="modal"
+                data-target="#filter-content">絞り込み</button>
             <button type="button" id="testBtn"
                 class="btn btn-outline-primary col-xl-2 col-md-6 ml-auto">テストデータ入力</button>
+        </div>
+
+        <div class="modal" id="filter-content" tabindex="-1" role="dialog">
+            <div id="modal-filter" class="modal-dialog modal-xl" role="document">
+                <div class="modal-header"></div>
+                <div class="modal-content">
+                    <div id="filter-body">
+                        aaaaa
+                    </div>
+                </div>
+                <div class="modal-footer"></div>
+            </div>
         </div>
 
         <div id="page1" class="pages">
             <table id="tbl1" class="table table-sm table-bordered" width="100%">
                 <thead class="bg-primary text-light">
                     <th>ID</th>
-                    <th class="dropdown mega-menu">
+                    <th>装備種別</th>
+                    <!-- <th class="dropdown mega-menu">
                         <form>
                             <div class="dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true"
                                 aria-expanded="false">
@@ -202,7 +266,7 @@
                                 </div>
                             </div>
                         </form>
-                    </th>
+                    </th> -->
                     <th>装備名</th>
                     <th>改修Lv</th>
                     <th>目標Lv</th>
