@@ -34,26 +34,26 @@
                 sliders[i] = new Slider('#slider' + (i), {});
             });
 
-            $('#valFilter').click(function () {
+            // $('#valFilter').click(function () {
 
-                var max = [sliders.length];
-                var min = [sliders.length];
+            //     var max = [sliders.length];
+            //     var min = [sliders.length];
 
-                //改修
-                max[0] = parseInt(sliders[0]._state.value[1]);
-                min[0] = parseInt(sliders[0]._state.value[0]);
-                if (min[0] > max[0]) { min[0] = 0; max[i] = 10 };
-                dt.columns(3).search('^' + numberRangeRegexp(min[0], max[0], false) + '$', true).draw();
+            //     //改修
+            //     max[0] = parseInt(sliders[0]._state.value[1]);
+            //     min[0] = parseInt(sliders[0]._state.value[0]);
+            //     if (min[0] > max[0]) { min[0] = 0; max[i] = 10 };
+            //     dt.columns(3).search('^' + numberRangeRegexp(min[0], max[0], false) + '$', true).draw();
 
-                //ステ
-                for (var i = 1; i < sliders.length ; i++) {
-                    max[i] = parseInt(sliders[i]._state.value[1]);
-                    min[i] = parseInt(sliders[i]._state.value[0]);
-                    if (min[i] > max[i]) { min[i] = 0; max[i] = 99 };
-                    dt.columns(5 + i).search('^' + numberRangeRegexp(min[i], max[i], false) + '$', true).draw();
-                }
+            //     //ステ
+            //     for (var i = 1; i < sliders.length ; i++) {
+            //         max[i] = parseInt(sliders[i]._state.value[1]);
+            //         min[i] = parseInt(sliders[i]._state.value[0]);
+            //         if (min[i] > max[i]) { min[i] = 0; max[i] = 99 };
+            //         dt.columns(5 + i).search('^' + numberRangeRegexp(min[i], max[i], false) + '$', true).draw();
+            //     }
 
-            });
+            // });
 
             $('#valReset').click(function () {
                 for (var i = 0; i < sliders.length; i++) {
@@ -88,6 +88,25 @@
                 dt.columns(1).search(searchType, true).draw();
 
                 $('input:checkbox[name="wpTypeCheck"]').change();
+               
+            });
+            
+            $('.modal-footer').click(function () {
+                var max = [sliders.length];
+                var min = [sliders.length];
+                //改修
+                max[0] = parseInt(sliders[0]._state.value[1]);
+                min[0] = parseInt(sliders[0]._state.value[0]);
+                if (min[0] > max[0]) { min[0] = 0; max[i] = 10 };
+                dt.columns(3).search('^' + numberRangeRegexp(min[0], max[0], false) + '$', true).draw();
+
+                //ステ
+                for (var i = 1; i < sliders.length; i++) {
+                    max[i] = parseInt(sliders[i]._state.value[1]);
+                    min[i] = parseInt(sliders[i]._state.value[0]);
+                    if (min[i] > max[i]) { min[i] = 0; max[i] = 99 };
+                    dt.columns(5 + i).search('^' + numberRangeRegexp(min[i], max[i], false) + '$', true).draw();
+                }
             });
 
             //データ反映処理
@@ -257,7 +276,7 @@
                         </div>
 
                         <button type="button" id="valReset" class="btn btn-outline-primary ">数値リセット</button>
-                        <button type="button" id="valFilter" class="btn btn-outline-primary ">フィルター</button>
+                        <!-- <button type="button" id="valFilter" class="btn btn-outline-primary ">フィルター</button> -->
 
                     </div>
                 </div>
