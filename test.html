@@ -26,24 +26,16 @@
 
         jQuery(function ($) {
 
+            //ページ切り替え
             $('.toggleBtn').click(function () {
                 var index = $('.toggleBtn').index(this);
                 $('.pages').hide();
                 $('.pages').eq(index).show();
             });
 
-            $('#putBtn').click(function () {
-                input = JSON.parse($("#jsonData").val());
-                $("#jsonData").val("");
-                dt.clear().draw();
-                dt.rows.add(input);
-                dt.columns.adjust().draw();
-                $('#ddm1').empty();
-                $('#ddm1').append('<span class="dropdown-item" href="#!">選択してください</span><hr>')
-                dt.column(1).cache('search').unique().each(function (d) { $('#ddm1').append('<a class="dropdown-item" href="#!">' + d + '</a>') });
-            });
-            
+            //ドロップダウン関連（処理が微妙すぎなのでドロップダウンはやめる方針
             $('.dropdown-menu').click(function (e) {
+                //ドロップダウンの子要素のクリックイベント（挙動が変
                 $("#AllCheck").click(function () {
                     $('input:checkbox[name="wpTypeCheck"]').prop("checked", true);
                 });
@@ -51,8 +43,10 @@
                     $('input:checkbox[name="wpTypeCheck"]').prop("checked", false);
                 });
 
+                //ドロップダウンが閉じないようにする、デバックとか使うと閉じる
                 e.stopPropagation();
 
+                //チェック状況によってフィルタを操作する
                 var typeChecked = [];
                 typeChecked.length = 0;
                 $('input:checkbox[name="wpTypeCheck"]:checked').each(function () {
@@ -64,19 +58,35 @@
                 $('input:checkbox[name="wpTypeCheck"]').change();
             });
 
+            //データ反映処理
+            $('#putBtn').click(function () {
+                input = JSON.parse($("#jsonData").val());
+                inputData(input);
+                $("#jsonData").val("");
+            });
+
+            //テストデータ投入処理
             $('#testBtn').click(function () {
                 input = JSON.parse(JSON.stringify(wp));
+                inputData(input);
+            });
+
+            //データ書き換え処理
+            function inputData(jsonData) {
+                //データ書き換え処理
                 dt.clear().draw();
-                dt.rows.add(input);
+                dt.rows.add(jsonData);
                 dt.columns.adjust().draw();
+
+                //ドロップダウン生成処理
                 $('#ddm1').empty();
-                $('#ddm1').append('<div class="row"><li class="list-inline-item col-6"><span class="dropdown-item">選択してください</span></li><button type="button" id="AllCheck" class="btn btn-outline-primary col-2" style="z-index: 999;">付ける</button><button type="button" id="AllNoCheck" class="btn btn-outline-primary col-2" style="z-index: 1000;">外す</button></div><hr>');
-                // dt.column(1).cache('search').unique().each(function (d) { $('#ddm1').append('<a class="dropdown-item" href="#!">' + d + '</a>') });
+                $('#ddm1').append('<div class="row"><li class="list-inline-item col-6"><span class="dropdown-item">選択してください</span></li>'
+                    + '<button type="button" id="AllCheck" class="btn btn-outline-primary col-2" style="z-index: 999;">付ける</button>'
+                    + '<button type="button" id="AllNoCheck" class="btn btn-outline-primary col-2" style="z-index: 1000;">外す</button></div><hr>');
                 var tmp = dt.column(1).cache('search').unique();
                 $('#ddm1').append('<div class="row col-12"></div>');
                 var j = 1;
                 for (let i = 0; i < tmp.length; i++) {
-                    // $('#ddm1 > div ').eq(j).append('<div class="col-md-6 col-xl-3"><a class="dropdown-item" href="#!">' + tmp[i] + '<input type="checkbox" class="ml-auto"></a></div>')
                     $('#ddm1 > div ').eq(j).append('<div class="dropdown-item col-md-6 col-xl-3" style="vertical-align:middle !important;"><div class="row col-12"><input type="checkbox" name="wpTypeCheck" value="' + tmp[i] + '"  checked="checked" class="col-2"><div class="col-8">' + tmp[i] + '</div></div></div>')
                     if (((i + 1) % 4) == 0) {
                         $('#ddm1').append('<div class="row col-12"></div>')
@@ -85,14 +95,16 @@
                 }
                 // 何故かあらかじめ1回クリックしておかないと動きがおかしくなる
                 $('.dropdown-menu').trigger("click");
-            });
+            };
 
+            //datatables言語設定
             $.extend($.fn.dataTable.defaults, {
                 language: {
                     url: "https://cdn.datatables.net/plug-ins/1.10.21/i18n/Japanese.json"
                 }
             });
 
+            //datatables初回処理
             dt = $('#tbl1').DataTable({
                 data: JSON.parse(JSON.stringify(input)),
                 lengthChange: false,
@@ -170,7 +182,6 @@
         </div>
 
         <div id="page1" class="pages">
-            <!-- <table id="tbl1" class="table-bordered cell-border stripe responsive norwap" width="100%"> -->
             <table id="tbl1" class="table table-sm table-bordered" width="100%">
                 <thead class="bg-primary text-light">
                     <th>ID</th>
@@ -180,7 +191,6 @@
                                 aria-expanded="false">
                                 装備種別
                                 <div id="ddm1" class="dropdown-menu col-5" aria-labelledby="dropdownMenu1">
-                                    <!-- <form> -->
                                     <div class="form-group">
                                         <div class="row">
                                             <li class="list-inline-item col-12"><a class="dropdown-item"
@@ -189,7 +199,6 @@
 
                                         </div>
                                     </div>
-                                    <!-- </form> -->
                                 </div>
                             </div>
                         </form>
