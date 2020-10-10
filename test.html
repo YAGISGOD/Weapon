@@ -5,26 +5,56 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta charset="utf-8">
-    <title>サンプル</title>
+    <title>装備管理</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css"
         href="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.22/b-1.6.4/b-flash-1.6.4/r-2.2.6/sl-1.3.1/datatables.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modaal@0.4.4/dist/css/modaal.min.css">
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modaal@0.4.4/dist/css/modaal.min.css"> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/bootstrap-slider.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
     <script type="text/javascript"
         src="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.22/b-1.6.4/b-flash-1.6.4/r-2.2.6/sl-1.3.1/datatables.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/modaal@0.4.4/dist/js/modaal.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/modaal@0.4.4/dist/js/modaal.min.js"></script> -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/11.0.2/css/bootstrap-slider.min.css" />
     <script src="columnsSettings.js"></script>
     <script src="wpdb.js"></script>
     <script src="wp.js"></script>
+    <script src="numberRangeRegexp.js"></script>
     <script>
         var dt;
         var input = [];
+        var sliders = [];
 
         jQuery(function ($) {
+
+            sliders = [$('.sliders').length];
+            $('.sliders').each(function (i, o) {
+                sliders[i] = new Slider('#slider' + (i + 1), {});
+            });
+
+            $('#valFilter').click(function () {
+
+                var max = [sliders.length];
+                var min = [sliders.length];
+
+                for (var i = 0; i < sliders.length; i++) {
+                    max[i] = parseInt(sliders[i]._state.value[1]);
+                    min[i] = parseInt(sliders[i]._state.value[0]);
+                    if (min[i] > max[i]) { min[i] = 0; max[i] = 99 };
+                    dt.columns(6 + i).search('^' + numberRangeRegexp(min[i], max[i], false) + '$', true).draw();
+                }
+
+            });
+
+            $('#valReset').click(function () {
+                for (var i = 0; i < sliders.length; i++) {
+                    sliders[i].refresh();
+                }
+            });
 
             //ページ切り替え
             $('.toggleBtn').click(function () {
@@ -32,6 +62,8 @@
                 $('.pages').hide();
                 $('.pages').eq(index).show();
             });
+
+
 
             // //ドロップダウン関連（処理が微妙すぎなのでドロップダウンはやめる方針
             // $('.dropdown-menu').click(function (e) {
@@ -85,11 +117,47 @@
                 $('input:checkbox[name="wpTypeCheck"]:checked').each(function () {
                     typeChecked.push($(this).val());
                 });
-                var searchType = typeChecked.join('|');
+                var searchType = '^' + typeChecked.join('$|^');
                 dt.columns(1).search(searchType, true).draw();
 
                 $('input:checkbox[name="wpTypeCheck"]').change();
             });
+
+            // $('#valFilter').click(function () {
+            //     var arrValFilMax = $(".valFilMax");
+            //     var arrValFilMin = $(".valFilMin");
+
+            //     arrValFilMin.each(function (i, o) {
+            //         arrValFilMin[i] = parseInt(o.value);
+            //         if (isNaN(arrValFilMin[i])) { arrValFilMin[i] = 0 };
+            //         arrValFilMax[i] = parseInt(arrValFilMax[i].value);
+            //         if (isNaN(arrValFilMax[i])) { arrValFilMax[i] = 99 };
+            //         if (arrValFilMin[i] > arrValFilMax[i]) { arrValFilMin[i] = 0; arrValFilMax[i] = 99 };
+            //         dt.columns(6 + i).search('^' + numberRangeRegexp(arrValFilMin[i], arrValFilMax[i], false) + '$', true).draw();
+            //     });
+            //     // $(".valFilMax").each(function (i, o) {
+            //     // });
+
+
+            //     // var torpedoMin = parseInt($('.torpedoMin').val());
+            //     // var torpedoMax = parseInt($('.torpedoMax').val());
+            //     // if (isNaN(torpedoMin)) { torpedoMin = 0 };
+            //     // if (isNaN(torpedoMax)) { torpedoMax = 99 };
+            //     // if (torpedoMin > torpedoMax) { return };
+            //     // dt.columns(7).search('^' + numberRangeRegexp(torpedoMin, torpedoMax, false) + '$', true).draw();
+
+            // });
+
+            // $('#valReset').click(function () {
+            //     var arrValFilMax = $(".valFilMax");
+            //     var arrValFilMin = $(".valFilMin");
+
+            //     arrValFilMin.each(function (i, o) {
+            //         arrValFilMin[i].value = "";
+            //         arrValFilMax[i].value = "";
+            //         dt.columns(6 + i).search('', true).draw();
+            //     });
+            // });
 
             //データ反映処理
             $('#putBtn').click(function () {
@@ -111,11 +179,11 @@
                 dt.rows.add(jsonData);
                 dt.columns.adjust().draw();
 
-                //ドロップダウン生成処理
+                //装備リスト生成処理
                 $('#filter-body').empty();
                 $('#filter-body').append('<div class="row"><li class="list-inline-item col-6"><span class="dropdown-item">選択してください</span></li>'
-                    + '<button type="button" id="AllCheck" class="btn btn-outline-primary col-2" style="z-index: 999;">付ける</button>'
-                    + '<button type="button" id="AllNoCheck" class="btn btn-outline-primary col-2" style="z-index: 1000;">外す</button></div><hr>');
+                    + '<button type="button" id="AllCheck" class="btn btn-outline-primary col-2" style="z-index: 999;">チェック付ける</button>'
+                    + '<button type="button" id="AllNoCheck" class="btn btn-outline-primary col-2" style="z-index: 1000;">チェック外す</button></div><hr>');
                 var tmp = dt.column(1).cache('search').unique();
                 $('#filter-body').append('<div class="row col-12"></div>');
                 var j = 1;
@@ -226,23 +294,98 @@
             <button type="button" id="inputBtn"
                 class="toggleBtn btn btn-outline-primary col-md-6 col-xl-1">データ入力</button>
             <button type="button" id="memoBtn" class="toggleBtn btn btn-outline-primary col-md-6 col-xl-1">メモ</button>
-            <button type="button" id="modalBtn" class="btn btn-outline-primary col-md-6 col-xl-1" data-toggle="modal"
+            <div class=" col-md-6 col-xl-1"></div>
+            <button type="button" id="modalBtn" class="btn btn btn-success col-md-6 col-xl-1" data-toggle="modal"
                 data-target="#filter-content">絞り込み</button>
             <button type="button" id="testBtn"
-                class="btn btn-outline-primary col-xl-2 col-md-6 ml-auto">テストデータ入力</button>
+                class="btn btn-warning col-xl-2 col-md-6 ml-auto">テストデータ入力</button>
         </div>
 
         <div class="modal" id="filter-content" tabindex="-1" role="dialog">
             <div id="modal-filter" class="modal-dialog modal-xl" role="document">
-                <div class="modal-header"></div>
                 <div class="modal-content">
+                    <div class="modal-header">
+
+                    </div>
                     <div id="filter-body">
-                        aaaaa
+                        装備の種類は今何故か自動生成だけどやめる
+                    </div>
+                    <div class="modal-footer">
+                        <div class="row">
+                            <div class="col-12">火力:<b>MIN　　</b><input id="slider1" type="text" class="slider1 sliders"
+                                    value="" data-slider-min="0" data-slider-max="99" data-slider-step="1"
+                                    data-slider-value="[0,99]" /><b>　　MAX</b></div>
+                            <div class="col-12">雷装:<b>MIN　　</b><input id="slider2" type="text" class="slider2 sliders"
+                                    value="" data-slider-min="0" data-slider-max="99" data-slider-step="1"
+                                    data-slider-value="[0,99]" /><b>　　MAX</b></div>
+                            <div class="col-12">対空:<b>MIN　　</b><input id="slider3" type="text" class="slider3 sliders"
+                                    value="" data-slider-min="0" data-slider-max="99" data-slider-step="1"
+                                    data-slider-value="[0,99]" /><b>　　MAX</b></div>
+                            <div class="col-12">装甲:<b>MIN　　</b><input id="slider4" type="text" class="slider4 sliders"
+                                    value="" data-slider-min="0" data-slider-max="99" data-slider-step="1"
+                                    data-slider-value="[0,99]" /><b>　　MAX</b></div>
+                            <div class="col-12">対潜:<b>MIN　　</b><input id="slider5" type="text" class="slider5 sliders"
+                                    value="" data-slider-min="0" data-slider-max="99" data-slider-step="1"
+                                    data-slider-value="[0,99]" /><b>　　MAX</b></div>
+                            <div class="col-12">回避:<b>MIN　　</b><input id="slider6" type="text" class="slider6 sliders"
+                                    value="" data-slider-min="0" data-slider-max="99" data-slider-step="1"
+                                    data-slider-value="[0,99]" /><b>　　MAX</b></div>
+                            <div class="col-12">索敵:<b>MIN　　</b><input id="slider7" type="text" class="slider7 sliders"
+                                    value="" data-slider-min="0" data-slider-max="99" data-slider-step="1"
+                                    data-slider-value="[0,99]" /><b>　　MAX</b></div>
+                            <div class="col-12">命中:<b>MIN　　</b><input id="slider8" type="text" class="slider8 sliders"
+                                    value="" data-slider-min="0" data-slider-max="99" data-slider-step="1"
+                                    data-slider-value="[0,99]" /><b>　　MAX</b></div>
+                            <div class="col-12">爆装:<b>MIN　　</b><input id="slider9" type="text" class="slider9 sliders"
+                                    value="" data-slider-min="0" data-slider-max="99" data-slider-step="1"
+                                    data-slider-value="[0,99]" /><b>　　MAX</b></div>
+
+                            <!-- <div class="col-3">
+                                <input type="number" class="valFilMin" min="0" max="99">MIN 火力 MAX<input type="number"
+                                    class="valFilMax" min="0" max="99">
+                            </div>
+                            <div class="col-3">
+                                <input type="number" class="valFilMin" min="0" max="99">MIN 雷装 MAX<input type="number"
+                                    class="valFilMax" min="0" max="99">
+                            </div>
+                            <div class="col-3">
+                                <input type="number" class="valFilMin" min="0" max="99">MIN 対空 MAX<input type="number"
+                                    class="valFilMax" min="0" max="99">
+                            </div>
+                            <div class="col-3">
+                                <input type="number" class="valFilMin" min="0" max="99">MIN 装甲 MAX<input type="number"
+                                    class="valFilMax" min="0" max="99">
+                            </div>
+                            <div class="col-3">
+                                <input type="number" class="valFilMin" min="0" max="99">MIN 対潜 MAX<input type="number"
+                                    class="valFilMax" min="0" max="99">
+                            </div>
+                            <div class="col-3">
+                                <input type="number" class="valFilMin" min="0" max="99">MIN 回避 MAX<input type="number"
+                                    class="valFilMax" min="0" max="99">
+                            </div>
+                            <div class="col-3">
+                                <input type="number" class="valFilMin" min="0" max="99">MIN 索敵 MAX<input type="number"
+                                    class="valFilMax" min="0" max="99">
+                            </div>
+                            <div class="col-3">
+                                <input type="number" class="valFilMin" min="0" max="99">MIN 命中 MAX<input type="number"
+                                    class="valFilMax" min="0" max="99">
+                            </div>
+                            <div class="col-3">
+                                <input type="number" class="valFilMin" min="0" max="99">MIN 爆装 MAX<input type="number"
+                                    class="valFilMax" min="0" max="99">
+                            </div> -->
+                        </div>
+
+                        <button type="button" id="valReset" class="btn btn-outline-primary ">数値リセット</button>
+                        <button type="button" id="valFilter" class="btn btn-outline-primary ">フィルター</button>
+
                     </div>
                 </div>
-                <div class="modal-footer"></div>
             </div>
         </div>
+
 
         <div id="page1" class="pages">
             <table id="tbl1" class="table table-sm table-bordered" width="100%">
