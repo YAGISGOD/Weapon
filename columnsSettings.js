@@ -25,6 +25,7 @@ columnsSettings = [
     },
     {
         data: "api_slotitem_id",
+        visible: false,
         render: function (data) { return db.find((v) => v.wpId === data.toString()).iconId },
         width: "50px"
     },
