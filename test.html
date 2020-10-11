@@ -56,9 +56,11 @@
 
             $(document).on('click', '#AllCheck', function () {
                 $('input:checkbox[name="wpTypeCheck"]').prop("checked", true);
+                $('input:checkbox[name="wpTypeLCheck"]').prop("checked", true);
             });
             $(document).on('click', '#AllNoCheck', function () {
                 $('input:checkbox[name="wpTypeCheck"]').prop("checked", false);
+                $('input:checkbox[name="wpTypeLCheck"]').prop("checked", false);
             });
 
             // $('filter-body').click(function (e) {
@@ -116,25 +118,25 @@
                 dt.columns.adjust().draw();
 
                 //装備種別リスト生成処理
-                $('#filter-body').empty();
-                $('#filter-body').append('<div class="row"><li class="list-inline-item col-6"><span class="dropdown-item">選択してください</span></li>'
-                    + '<button type="button" id="AllCheck" class="btn btn-outline-primary col-2" style="z-index: 999;">チェック付ける</button>'
-                    + '<button type="button" id="AllNoCheck" class="btn btn-outline-primary col-2" style="z-index: 1000;">チェック外す</button></div><hr>');
-                var tmp = dt.column(1).cache('search').unique();
-                $('#filter-body').append('<div class="row col-12"></div>');
-                var j = 1;
-                for (let i = 0; i < tmp.length; i++) {
-                    $('#filter-body > div ').eq(j).append('<div class="dropdown-item col-md-6 col-xl-3" style="vertical-align:middle !important;">' +
-                        '<div class="row col-12"><input type="checkbox" name="wpTypeCheck" value="' + tmp[i] + '"  checked="checked" class="col-2"><div class="col-8">' + tmp[i] + '</div></div></div>')
-                    if (((i + 1) % 4) == 0) {
-                        $('#filter-body ').append('<div class="row col-12"></div>')
-                        j++;
-                    }
-                }
+                // $('#filter-body').empty();
+                // $('#filter-body').append('<div class="row"><li class="list-inline-item col-6"><span class="dropdown-item">選択してください</span></li>'
+                //     + '<button type="button" id="AllCheck" class="btn btn-outline-primary col-2" style="z-index: 999;">チェック付ける</button>'
+                //     + '<button type="button" id="AllNoCheck" class="btn btn-outline-primary col-2" style="z-index: 1000;">チェック外す</button></div><hr>');
+                // var tmp = dt.column(1).cache('search').unique();
+                // $('#filter-body').append('<div class="row col-12"></div>');
+                // var j = 1;
+                // for (let i = 0; i < tmp.length; i++) {
+                //     $('#filter-body > div ').eq(j).append('<div class="dropdown-item col-md-6 col-xl-3" style="vertical-align:middle !important;">' +
+                //         '<div class="row col-12"><input type="checkbox" name="wpTypeCheck" value="' + tmp[i] + '"  checked="checked" class="col-2"><div class="col-8">' + tmp[i] + '</div></div></div>')
+                //     if (((i + 1) % 4) == 0) {
+                //         $('#filter-body ').append('<div class="row col-12"></div>')
+                //         j++;
+                //     }
+                // }
             };
 
             $('#filter-body').append(`<div class="row col-12">
-                                    <button type="button" id="LcateBtn" class="btn btn-outline-primary cateToggleBtn col-6" >大カテゴリ</button>
+                                    <button type="button" id="LcateBtn" class="btn btn-outline-primary cateToggleBtn col-6" >大カテゴリ(未実装)</button>
                                     <button type="button" id="ScateBtn" class="btn btn-outline-primary cateToggleBtn col-6" >小カテゴリ</button>
                                     </div>`);
             var j = 0;
@@ -142,7 +144,7 @@
             $('#catePage1').append(`<div class="row col-12"></div>`);
             for (let i = 0; i < 20; i++) {
                 $('#catePage1 > div ').eq(j).append(`<div class="dropdown-item col-md-6 col-xl-3" style="vertical-align:middle !important;">
-                    <div class="row col-12"><input type="checkbox" name="wpTypeCheck" value="${wpTypeLDb.find((v) => v.wpTypeLCateId === (i + 1).toString()).wpTypeLCateName}"  checked="checked" class="col-2"><div class="col-8">
+                    <div class="row col-12"><input type="checkbox" name="wpTypeLCheck" value="${wpTypeLDb.find((v) => v.wpTypeLCateId === (i + 1).toString()).wpTypeLCateName}"  checked="checked" class="col-2"><div class="col-8">
                         ${wpTypeLDb.find((v) => v.wpTypeLCateId === (i + 1).toString()).wpTypeLCateName}</div></div>`)
                 if ((((i + 1) % 4) == 0) && (i !== (20 - 1))) {
                     $('#catePage1 ').append('<div class="row col-12"></div>')
@@ -259,7 +261,11 @@
             <div id="modal-filter" class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-
+                        <div class="row col-12">
+                            <li class="list-inline-item col-6"><span class="dropdown-item">選択してください</span></li>
+                            <button type="button" id="AllCheck" class="btn btn-outline-primary col-2">全チェック</button>
+                            <button type="button" id="AllNoCheck" class="btn btn-outline-primary col-2">チェックを外す</button>
+                        </div>
                     </div>
                     <div id="filter-body">
 
