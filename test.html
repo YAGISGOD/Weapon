@@ -21,6 +21,7 @@
     <script src="columnsSettings.js"></script>
     <script src="wpdb.js"></script>
     <script src="wp.js"></script>
+    <script src="wpTypeL.js"></script>
     <script src="numberRangeRegexp.js"></script>
     <script>
         var dt;
@@ -34,27 +35,6 @@
                 sliders[i] = new Slider('#slider' + (i), {});
             });
 
-            // $('#valFilter').click(function () {
-
-            //     var max = [sliders.length];
-            //     var min = [sliders.length];
-
-            //     //改修
-            //     max[0] = parseInt(sliders[0]._state.value[1]);
-            //     min[0] = parseInt(sliders[0]._state.value[0]);
-            //     if (min[0] > max[0]) { min[0] = 0; max[i] = 10 };
-            //     dt.columns(3).search('^' + numberRangeRegexp(min[0], max[0], false) + '$', true).draw();
-
-            //     //ステ
-            //     for (var i = 1; i < sliders.length ; i++) {
-            //         max[i] = parseInt(sliders[i]._state.value[1]);
-            //         min[i] = parseInt(sliders[i]._state.value[0]);
-            //         if (min[i] > max[i]) { min[i] = 0; max[i] = 99 };
-            //         dt.columns(5 + i).search('^' + numberRangeRegexp(min[i], max[i], false) + '$', true).draw();
-            //     }
-
-            // });
-
             $('#valReset').click(function () {
                 for (var i = 0; i < sliders.length; i++) {
                     sliders[i].refresh();
@@ -66,6 +46,12 @@
                 var index = $('.toggleBtn').index(this);
                 $('.pages').hide();
                 $('.pages').eq(index).show();
+            });
+            //ページ切り替え
+            $(document).on('click', '.cateToggleBtn', function () {
+                var index = $('.cateToggleBtn').index(this);
+                $('.catePages').hide();
+                $('.catePages').eq(index).show();
             });
 
             $(document).on('click', '#AllCheck', function () {
@@ -88,9 +74,9 @@
                 dt.columns(1).search(searchType, true).draw();
 
                 $('input:checkbox[name="wpTypeCheck"]').change();
-               
+
             });
-            
+
             $('.modal-footer').click(function () {
                 var max = [sliders.length];
                 var min = [sliders.length];
@@ -116,11 +102,11 @@
                 $("#jsonData").val("");
             });
 
-            //テストデータ投入処理
-            // $('#testBtn').click(function () {
-            //     input = JSON.parse(JSON.stringify(wp));
-            //     inputData(input);
-            // });
+            // テストデータ投入処理
+            $('#testBtn').click(function () {
+                input = JSON.parse(JSON.stringify(wp));
+                inputData(input);
+            });
 
             //データ書き換え処理
             function inputData(jsonData) {
@@ -129,7 +115,7 @@
                 dt.rows.add(jsonData);
                 dt.columns.adjust().draw();
 
-                //装備リスト生成処理
+                //装備種別リスト生成処理
                 $('#filter-body').empty();
                 $('#filter-body').append('<div class="row"><li class="list-inline-item col-6"><span class="dropdown-item">選択してください</span></li>'
                     + '<button type="button" id="AllCheck" class="btn btn-outline-primary col-2" style="z-index: 999;">チェック付ける</button>'
@@ -138,13 +124,44 @@
                 $('#filter-body').append('<div class="row col-12"></div>');
                 var j = 1;
                 for (let i = 0; i < tmp.length; i++) {
-                    $('#filter-body > div ').eq(j).append('<div class="dropdown-item col-md-6 col-xl-3" style="vertical-align:middle !important;"><div class="row col-12"><input type="checkbox" name="wpTypeCheck" value="' + tmp[i] + '"  checked="checked" class="col-2"><div class="col-8">' + tmp[i] + '</div></div></div>')
+                    $('#filter-body > div ').eq(j).append('<div class="dropdown-item col-md-6 col-xl-3" style="vertical-align:middle !important;">' +
+                        '<div class="row col-12"><input type="checkbox" name="wpTypeCheck" value="' + tmp[i] + '"  checked="checked" class="col-2"><div class="col-8">' + tmp[i] + '</div></div></div>')
                     if (((i + 1) % 4) == 0) {
                         $('#filter-body ').append('<div class="row col-12"></div>')
                         j++;
                     }
                 }
             };
+
+            $('#filter-body').append(`<div class="row col-12">
+                                    <button type="button" id="LcateBtn" class="btn btn-outline-primary cateToggleBtn col-6" >大カテゴリ</button>
+                                    <button type="button" id="ScateBtn" class="btn btn-outline-primary cateToggleBtn col-6" >小カテゴリ</button>
+                                    </div>`);
+            var j = 0;
+            $('#filter-body').append(`<div id="catePage1" class="row col-12 catePages"></div>`);
+            $('#catePage1').append(`<div class="row col-12"></div>`);
+            for (let i = 0; i < 20; i++) {
+                $('#catePage1 > div ').eq(j).append(`<div class="dropdown-item col-md-6 col-xl-3" style="vertical-align:middle !important;">
+                    <div class="row col-12"><input type="checkbox" name="wpTypeCheck" value="${wpTypeLDb.find((v) => v.wpTypeLCateId === (i + 1).toString()).wpTypeLCateName}"  checked="checked" class="col-2"><div class="col-8">
+                        ${wpTypeLDb.find((v) => v.wpTypeLCateId === (i + 1).toString()).wpTypeLCateName}</div></div>`)
+                if ((((i + 1) % 4) == 0) && (i !== (20 - 1))) {
+                    $('#catePage1 ').append('<div class="row col-12"></div>')
+                    j++;
+                }
+
+            }
+            j = 0;
+            $('#filter-body').append(`<div id="catePage2" class="row col-12 catePages" style="display: none;"></div>`);
+            $('#catePage2').append(`<div class="row col-12"></div>`);
+            for (let i = 0; i < wpTypeLDb.length; i++) {
+                $('#catePage2 > div ').eq(j).append(`<div class="dropdown-item col-md-6 col-xl-3" style="vertical-align:middle !important;">
+                    <div class="row col-12"><input type="checkbox" name="wpTypeCheck" value="${wpTypeLDb[i].wpTypeCateName}"  checked="checked" class="col-2"><div class="col-8">
+                        ${wpTypeLDb[i].wpTypeCateName}</div></div>`)
+                if ((((i + 1) % 4) == 0) && (i !== (wpTypeLDb.length - 1))) {
+                    $('#catePage2 ').append('<div class="row col-12"></div>')
+                    j++;
+                }
+            }
 
             //datatables言語設定
             $.extend($.fn.dataTable.defaults, {
@@ -156,7 +173,8 @@
             //datatables初回処理
             dt = $('#tbl1').DataTable({
                 data: JSON.parse(JSON.stringify(input)),
-                lengthChange: false,
+                responsive: true,
+                // lengthChange: false,
                 displayLength: 50,
                 select: true,
                 columns: columnsSettings
@@ -183,6 +201,11 @@
         table.dataTable thead .sorting_asc::after,
         table.dataTable thead .sorting_asc::before {
             display: none;
+        }
+
+        table.dataTable.dtr-inline.collapsed.table-sm>tbody>tr>td:first-child:before,
+        table.dataTable.dtr-inline.collapsed.table-sm>tbody>tr>th:first-child:before {
+            top: 11px !important;
         }
 
         table.dataTable thead .sorting_desc::after,
@@ -229,7 +252,7 @@
             <div class=" col-md-6 col-xl-1"></div>
             <button type="button" id="modalBtn" class="btn btn btn-success col-md-6 col-xl-1" data-toggle="modal"
                 data-target="#filter-content">絞り込み</button>
-            <!-- <button type="button" id="testBtn" class="btn btn-warning col-xl-2 col-md-6 ml-auto">テストデータ入力</button> -->
+            <button type="button" id="testBtn" class="btn btn-warning col-xl-2 col-md-6 ml-auto">テストデータ入力</button>
         </div>
 
         <div class="modal" id="filter-content" tabindex="-1" role="dialog">
@@ -239,7 +262,7 @@
 
                     </div>
                     <div id="filter-body">
-                        memo:装備の種類は今何故か自動生成だけどやめる
+
                     </div>
                     <div class="modal-footer">
                         <div class="row">
@@ -285,7 +308,7 @@
 
 
         <div id="page1" class="pages">
-            <table id="tbl1" class="table table-sm table-bordered" width="100%">
+            <table id="tbl1" class="table table-sm table-bordered nowrap" width="100%">
                 <thead class="bg-primary text-light">
                     <th>ID</th>
                     <th>装備種別</th>

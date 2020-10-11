@@ -1,0 +1,2 @@
+[1011/113410.303:ERROR:settings.cc(430)] Settings version is not 5
+[1011/121251.933:ERROR:directory_reader_win.cc(43)] FindFirstFile: 指定されたパスが見つかりません。 (0x3)
